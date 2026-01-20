@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 gen(rd()); // seed the generator
 	std::uniform_int_distribution<> distr(0, 255); // define the range
-	
+
 	Mesh m;
 	string fname ;
 	if (argc != 2)
@@ -43,10 +43,26 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	// Coloring vertices based on their degree
-	create_color_card_per_vertice_degree(m);
+	std::cout << "Mesh loaded: " << m.number_of_vertices() << " sommets" << std::endl;
 
-	//
+	// Calcul les degrés
+	compute_vertex_degrees(m);
+
+	// Coloration selon les degrés
+	//color_mesh_by_degree(m);
+
+	// Coloration selon les courbures gaussiennes
+	color_mesh_by_curvature(m);
+
+	// Sauvegarde du maillage coloré
+	std::string out_name = "test_colored.off";
+	if(!CGAL::IO::write_polygon_mesh(out_name, m, CGAL::parameters::vertex_color_map(m.property_map<Mesh::Vertex_index, CGAL::Color>("v:color").first))) {
+		std::cerr << "Erreur écriture fichier." << std::endl;
+		return 1;
+	}
+
+	std::cout << "Fichier genere : " << out_name << std::endl;
+
 
 	return 0;
 }

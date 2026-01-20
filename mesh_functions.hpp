@@ -8,23 +8,37 @@
 #include <random>
 #include "starter_defs.h"
 #include <CGAL/IO/Color.h>
+#include <cmath>
+#include <vector>
+#include <algorithm> // pour std::max etc.
+
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 
 using namespace std ;
 
 CGAL::Color rand_color(std::uniform_int_distribution<> &distr, std::mt19937 &gen) ;
 
-vector<Mesh::Vertex_index> vertex_neighbors (Mesh::Vertex_index v, const Mesh &m);
-
 CGAL::Color color_ramp(double vmin, double vmax, double mean, double stdev, double v, CGAL::Color col1, CGAL::Color col2);
 
-vector<Mesh::Vertex_index> vneigh (Mesh::Vertex_index v, Mesh &m);
 
-int add_deg_to_vertices(Mesh &m);
+// Partie une du TP 1
 
-void create_color_card_per_vertice_degree(Mesh &m);
+// Voisins d'un sommet
+std::vector<Mesh::Vertex_index> vneightbors(Mesh::Vertex_index v, const Mesh &m);
 
-double gaussian_curvature(Mesh::Vertex_index v, const Mesh &m);
+// Calcul des degrés
+void compute_vertex_degrees(Mesh &m);
 
-void gaussian_curv(Mesh &m, Mesh::Property_map<vertex_descriptor,double> &Kcourb);
+// Coloration selon le degré
+void color_mesh_by_degree(Mesh &m);
+
+
+// Partie deux du TP 1
+
+void gaussian_cruve(Mesh &m, Mesh::Property_map<Mesh::Vertex_index, double> &Kcourb);
+
+void color_mesh_by_curvature(Mesh &m);
 
 #endif /* mesh_functions_hpp */
